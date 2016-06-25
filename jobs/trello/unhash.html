@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+  </head>
+	<body>
+		<div class="skinny">
+			<div class="jumbotron">
+				<form>
+					<h4>
+						<a href="https://trello.com/jobs/internal-software-developer">Job Ad</a>
+					</h4>
+          <label><strong>Hash</strong></label>
+					<div class="input-group">
+						<input class="form-control" type="text" placeholder="tacospolsky" id="hash-input" />
+						<a class="btn btn-primary input-group-addon" id="execute-hash">&gt;</a>
+						<input class="form-control" type="text" disabled id="hash-output" />
+					</div>
+          <label><strong>Unhash</strong></label>
+					<div class="input-group">
+						<input class="form-control" type="text" placeholder="930846109532517" id="unhash-input" />
+						<a class="btn btn-primary input-group-addon" id="execute-unhash">&gt;</a>
+						<input class="form-control" type="text" disabled id="unhash-output" />
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script>
+	var LETTERS = "acdegilmnoprstuw";
+
+	function unhash(integer) {
+		var remaining = integer;
+		var string = '';
+		var current = 0;
+		while (remaining !== 7) {
+			var index = remaining % 37;
+			if (!(index > -1 && index < LETTERS.length)) {
+				throw new Error('expected remainder between 0 and 15 for ' + remaining + ', but got ' + index + '. Provided value "' + integer + '" cannot be unhashed.');
+			}
+			string = LETTERS[index] + string;
+			remaining = (remaining - index) / 37;
+			if (++current > 20 || remaining < 7) {
+				throw new Error('expected hash for string shorter than 20 characters, last 20 characters are ' + string + ' and remaining to unhash is ' + remaining);
+			};
+
+		}
+		console.log('unhash of ' + integer + ' is ' + string);
+		return string;
+	};
+
+	function hash(s) {
+		h = 7;
+		for (i = 0; i < s.length; i++) {
+			h = (h * 37 + LETTERS.indexOf(s[i]));
+		}
+		return h;
+
+	};
+  var legal = LETTERS.split("").map(function(e){ return e.charCodeAt(0); });
+  $('#hash-input').bind('keypress', function(e) {
+    console.log(legal, e.charCode, legal.indexOf(e.charCode));
+    if (!(legal.indexOf(e.charCode) > -1)) {
+      e.preventDefault();
+    }
+});
+
+  $("#execute-hash").click(function(e) {
+		e.preventDefault();
+		var input = $("#hash-input").val();
+		var output = hash(input);
+		$("#hash-output").val(output);
+	});
+  $("#execute-unhash").click(function(e) {
+		e.preventDefault();
+		var input = Number.parseInt($("#unhash-input").val());
+		var output = unhash(input);
+		$("#unhash-output").val(output);
+	});
+	$("#hashed").val("930846109532517")
+
+	</script>
+</html>
